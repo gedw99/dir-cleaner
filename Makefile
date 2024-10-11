@@ -46,7 +46,17 @@ test-create: test-del
 	cd $(TEST_ROOT)/sub01 && mkdir -p .src
 	cd $(TEST_ROOT)/sub01/.src  && touch main.txt other.txt
 
-	## double nest it 
+	# need this to see whats going on inside CI.
+	# https://github.com/a8m/tree
+	go install github.com/a8m/tree/cmd/tree@latest
+
+	@echo ""
+	@echo "- printing the test folders"
+	@echo ""
+	cd $(TEST_ROOT) && tree -h -a
+	@echo ""
+
+	## double nest it. turned off because Ubuntu hates copying folders into itself.
 	#mkdir -p $(TEST_ROOT)/sub01/sub
 	#cp -r $(TEST_ROOT)/sub01 $(TEST_ROOT)/sub01/sub
 
