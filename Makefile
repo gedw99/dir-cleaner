@@ -46,12 +46,17 @@ print:
 ## This is called by CI, so that we build for each OS and do the tests we want.
 ci-test: print bin test
 
-mod-init:
-	# For forks, we need to do the replace thing...
-	#rm -rf go.mod
-	#rm -rf go.sum
-	#go mod init dir-cleaner
-	#$(MAKE) mod-tidy
+# 
+mod-fork-del:
+	# remove replace directive.
+	#  https://github.com/guumaster/dir-cleaner
+
+mod-fork:
+	# create replace directive.
+	# https://github.com/gedw99/dir-cleaner
+	go mod edit -replace github.com/guumaster/dir-cleaner=github.com/gedw99/dir-cleaner@master
+
+
 mod-tidy:
 	go mod tidy
 mod-upgrade: mod-tidy
