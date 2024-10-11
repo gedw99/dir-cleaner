@@ -22,9 +22,6 @@ ifeq ($(BASE_GO_OS_NAME),windows)
 	BIN_NAME=dir_cleaner.exe
 endif
 
-
-
-
 export PATH:=$(BIN_ROOT):$(PATH)
 
 print:
@@ -41,17 +38,24 @@ print:
 	@echo ""
 
 
-
-
 ## This is called by CI, so that we build for each OS and do the tests we want.
 ci-test: print bin test
 
-# 
+### mod
+
+MOD-ORIGINAL=github.com/guumaster/dir-cleaner
+
+mod-print:
+	@echo ""
+	@echo "- mod"
+	@echo ""
+	# TODO: check if on a fork, that mod replace is correct and visa versa.
+
 mod-fork-del:
 	# remove replace directive.
 	#  https://github.com/guumaster/dir-cleaner
-	go mod edit -replace github.com/guumaster/dir-cleaner=github.com/gedw99/dir-cleaner@master
-
+	go mod edit -replace github.com/gedw99/dir-cleaner=github.com/guumaster/dir-cleaner@master
+	$(MAKE) mod-tidy
 mod-fork:
 	# create replace directive.
 	# see: https://www.jvt.me/posts/2022/07/07/go-mod-fork/
@@ -59,12 +63,13 @@ mod-fork:
 	# https://github.com/gedw99/dir-cleaner
 	go mod edit -replace github.com/guumaster/dir-cleaner=github.com/gedw99/dir-cleaner@master
 	$(MAKE) mod-tidy
-
 mod-tidy:
 	go mod tidy
 mod-upgrade: mod-tidy
 	go install github.com/oligot/go-mod-upgrade@latest
 	go-mod-upgrade
+
+### bin and run
 
 bin-del:
 	rm -rf $(BIN_ROOT)
@@ -73,7 +78,7 @@ bin: bin-del
 	@echo $(BIN_ROOT_NAME) >> .gitignore
 	cd cmd/dir-cleaner && go build -o $(BIN_ROOT)/$(BIN_NAME)
 bin-cross:
-	
+	# let goreleaaer do it
 
 run-h:
 	$(BIN_NAME) -h
@@ -81,6 +86,7 @@ run-version:
 	# TODO: align versioning for bin, goreleaser and dep updates.
 	$(BIN_NAME) --version
 
+### test
 
 TEST_ROOT_NAME=test-golden
 TEST_ROOT=$(PWD)/$(TEST_ROOT_NAME)
@@ -135,11 +141,17 @@ test-run:
 	cd $(TEST_ROOT) && $(BIN_NAME) --verbose --pattern *\.bin
 	cd $(TEST_ROOT) && $(BIN_NAME) --verbose --pattern *\.dep
 
-
-
 test-go:
 	go test ./...
 	#cd tests && go test ./...
+
+### tag and release 
+
+TAG_VERSION=v0.1.0
+TAG_MESSAGE=First release
+tag:
+	git tag -a $(TAG_VERSION) -m "$(TAG_MESSAGE)"
+	git push origin $(TAG_VERSION)
 
 release-dep:
 	# https://github.com/goreleaser/goreleaser
@@ -149,8 +161,3 @@ release: release-dep
 	goreleaser check
 	goreleaser release --snapshot --clean
 
-TAG_VERSION=v0.1.0
-TAG_MESSAGE=First release
-tag:
-	git tag -a $(TAG_VERSION) -m "$(TAG_MESSAGE)"
-	git push origin $(TAG_VERSION)
