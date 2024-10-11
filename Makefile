@@ -49,13 +49,17 @@ ci-test: print bin test
 mod-init:
 	rm -rf go.mod
 	rm -rf go.sum
-	go mod init github.com/gedw99/dir-cleaner
+	go mod init dir-cleaner
+	$(MAKE) mod-tidy
 mod-tidy:
 	go mod tidy
 mod-upgrade: mod-tidy
 	go install github.com/oligot/go-mod-upgrade@latest
 	go-mod-upgrade
-bin:
+
+bin-del:
+	rm -rf $(BIN_ROOT)
+bin: bin-del
 	mkdir -p $(BIN_ROOT)
 	@echo $(BIN_ROOT_NAME) >> .gitignore
 	cd cmd/dir-cleaner && go build -o $(BIN_ROOT)/$(BIN_NAME)
@@ -69,10 +73,16 @@ run-version:
 	$(BIN_NAME) --version
 
 
-TEST_ROOT_NAME=test
+TEST_ROOT_NAME=test-golden
 TEST_ROOT=$(PWD)/$(TEST_ROOT_NAME)
 
-test: test-create test-run test-go
+test: bin test-print test-create test-run test-go
+test-print:
+	@echo ""
+	@echo "-- test golden"
+	@echo "TEST_ROOT_NAME:          $(TEST_ROOT_NAME)"
+	@echo "TEST_ROOT:               $(TEST_ROOT)"
+	@echo ""
 test-del:
 	rm -rf $(TEST_ROOT)
 test-create: test-del
@@ -88,6 +98,7 @@ test-create: test-del
 	cd $(TEST_ROOT)/sub01/.src  && touch main.txt other.txt
 
 	# need this to see whats going on inside CI.
+	# This works correctly on Windows ARM64 ( and darwin and linux ), so its correct to use it for testing.
 	# https://github.com/a8m/tree
 	go install github.com/a8m/tree/cmd/tree@latest
 
