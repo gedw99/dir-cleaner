@@ -43,19 +43,22 @@ test-create: test-del
 	cd $(TEST_ROOT)/sub01 && mkdir -p .src
 	cd $(TEST_ROOT)/sub01/.src  && touch main.txt other.txt
 
+	## double nest it 
+	mkdir -p $(TEST_ROOT)/sub01/sub
+	cp -r $(TEST_ROOT)/sub01 $(TEST_ROOT)/sub01/sub/
+
 test-run:
 	# objective is to delete all folders and sub folders with varius .bin, .dep, folders.
+	# works :) Toolazy to write an assertion right now..
 	cd $(TEST_ROOT) && $(BIN_NAME) --verbose --pattern */.bin
 
 	cd $(TEST_ROOT) && $(BIN_NAME) --verbose --pattern */.dep
-	
 
 release-dep:
 	# https://github.com/goreleaser/goreleaser
 	# https://github.com/goreleaser/goreleaser/releases/tag/v2.3.2
 	go install github.com/goreleaser/goreleaser/v2@v2.3.2
 release: release-dep
-	#goreleaser -h
 	goreleaser check
 	goreleaser release --snapshot --clean
 
