@@ -25,6 +25,12 @@ release-dep:
 	# https://github.com/goreleaser/goreleaser/releases/tag/v2.3.2
 	go install github.com/goreleaser/goreleaser/v2@v2.3.2
 release: release-dep
-	goreleaser -h
+	#goreleaser -h
 	goreleaser check
 	goreleaser release --snapshot --clean
+
+TAG_VERSION=v0.1.0
+TAG_MESSAGE=First release
+tag:
+	git tag -a $(TAG_VERSION) -m "$(TAG_MESSAGE)"
+	git push origin $(TAG_VERSION)
