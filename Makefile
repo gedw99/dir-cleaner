@@ -1,5 +1,7 @@
 # original upstream: https://github.com/guumaster/dir-cleaner
 
+# shells for github: https://dev.to/pwd9000/github-actions-all-the-shells-581h
+
 BASE_SHELL_OS_NAME := $(shell uname -s | tr A-Z a-z)
 BASE_SHELL_OS_ARCH := $(shell uname -m | tr A-Z a-z)
 
@@ -86,7 +88,7 @@ test-create: test-del
 	@echo ""
 	@echo "- printing the test folders"
 	@echo ""
-	cd $(TEST_ROOT) && $(TREE_BIN_NAME) -h -a
+	cd $(TEST_ROOT) && $(TREE_BIN_NAME) -h -a -f
 	@echo ""
 
 	## double nest it. turned off because Ubuntu hates copying folders into itself.

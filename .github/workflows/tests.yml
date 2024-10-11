@@ -17,5 +17,5 @@ jobs:
       - name: go Test
         run: go test ./...
       - name: folder Test
-        shell: bash
+        shell: sh
         run: make ci-test

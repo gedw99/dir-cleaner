@@ -17,4 +17,9 @@ jobs:
       - name: go Test
         run: go test ./...
       - name: folder Test
+        shell: cmd
         run: make ci-test
+      - name: folder Test
+        shell: PowerShell
+        run: make ci-test
+      
