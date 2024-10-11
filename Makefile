@@ -47,8 +47,8 @@ test-create: test-del
 	cd $(TEST_ROOT)/sub01/.src  && touch main.txt other.txt
 
 	## double nest it 
-	mkdir -p $(TEST_ROOT)/sub01/sub
-	cp -r $(TEST_ROOT)/sub01 $(TEST_ROOT)/sub01/sub/
+	#mkdir -p $(TEST_ROOT)/sub01/sub
+	#cp -r $(TEST_ROOT)/sub01 $(TEST_ROOT)/sub01/sub
 
 test-run:
 	# objective is to delete all folders and sub folders with varius .bin, .dep, folders.
