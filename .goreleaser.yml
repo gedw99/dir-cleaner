@@ -4,7 +4,7 @@ project_name: dir-cleaner
 builds:
   - id: dir-cleaner
     binary: dir-cleaner
-    main: cmd/main.go
+    main: cmd/dir-cleaner/main.go
     env:
       - GO111MODULE=on
       - CGO_ENABLED=0
@@ -14,6 +14,7 @@ builds:
       - windows
     goarch:
       - amd64
+      - arm64
 
 changelog:
   sort: desc
@@ -32,7 +33,7 @@ before:
 
 release:
   github:
-    owner: guumaster
+    owner: gedw99
     name: dir-cleaner
 
 nfpms:
@@ -42,6 +43,6 @@ nfpms:
     formats:
       - deb
     vendor: Guumaster
-    homepage: https://github.com/guumaster/dir-cleaner
-    maintainer: guumaster <guuweb@gmail.com>
+    homepage: https://github.com/gedw99/dir-cleaner
+    maintainer: gedw99 https://github.com/gedw99
     description: remove forgotten folders quick and easy

@@ -4,6 +4,8 @@
 [![License](https://img.shields.io/github/license/guumaster/dir-cleaner)](https://github.com/guumaster/dir-cleaner/LICENSE)
 # Dir Cleaner
 
+NOTE: This is a fork of https://github.com/guumaster/dir-cleaner, due to that oen installing a bin called "cmd", which is just too generic, and clashes.
+
 A simple tool to scan and remove unwanted directories from your system.
 
 It may takes between 10 or 15 seconds if you pass a path 200Gb and 2 million files. It's really fast if you narrow the search.
@@ -39,6 +41,7 @@ Path: [/]: Scanned 2,045,830 files. Matched 254,183 in 2,731 directories. [1.9 G
 
 	AUTHOR:
 	   Guumaster <guuweb@gmail.com>
+	   "gedw99" https://github.com/gedw99
 
 	COMMANDS:
 	   help, h  Shows a list of commands or help for one command
