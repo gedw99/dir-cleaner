@@ -1,0 +1,22 @@
+C:\Users\admin\Downloads\Telegram Desktop>tree.exe -h -a
+[4.2M]  .
+├── [456K]  10AB492D-1399-4732-9045-F775AEBD89F4.pdf
+├── [3.7M]  dir-cleaner.exe
+└── [????]  sub
+    ├── [   0]  .bin
+    │   └── [   0]  New Text Document.txt
+    ├── [   0]  .dep
+    └── [????]  sub-again
+        ├── [????]  .bin
+        └── [????]  .dep
+
+6 directories, 3 files
+
+C:\Users\admin\Downloads\Telegram Desktop>.\dir-cleaner.exe --dry-run --verbose --pattern *\.bin
+DURING THIS DRY RUN YOUR DATA WON'T BE HARM IN ANY WAY.
+No match found on [C:\Users\admin\Downloads\Telegram Desktop]
+
+
+C:\Users\admin\Downloads\Telegram Desktop>.\dir-cleaner.exe --dry-run --verbose --pattern */.bin
+DURING THIS DRY RUN YOUR DATA WON'T BE HARM IN ANY WAY.
+No match found on [C:\Users\admin\Downloads\Telegram Desktop]

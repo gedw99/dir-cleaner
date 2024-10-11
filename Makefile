@@ -1,17 +1,48 @@
 # original upstream: https://github.com/guumaster/dir-cleaner
 
+BASE_SHELL_OS_NAME := $(shell uname -s | tr A-Z a-z)
+BASE_SHELL_OS_ARCH := $(shell uname -m | tr A-Z a-z)
+
+# os
+BASE_OS_NAME := $(shell go env GOOS)
+BASE_OS_ARCH := $(shell go env GOARCH)
 
 BIN_ROOT_NAME=.bin
 BIN_ROOT=$(PWD)/$(BIN_ROOT_NAME)
 
+TREE_BIN_NAME=tree
+ifeq ($(BASE_OS_NAME),windows)
+	TREE_BIN_NAME=tree.exe
+endif
+
 BIN_NAME=dir_cleaner
+ifeq ($(BASE_OS_NAME),windows)
+	BIN_NAME=git.exe
+endif
+
+
+
 
 export PATH:=$(BIN_ROOT):$(PATH)
 
 print:
+	@echo ""
+	@echo "--- base : shell ---"
+	@echo "BASE_SHELL_OS_NAME:     $(BASE_SHELL_OS_NAME)"
+	@echo "BASE_SHELL_OS_ARCH:     $(BASE_SHELL_OS_ARCH)"
+	@echo "--- base : os ---"
+	@echo "BASE_OS_NAME:           $(BASE_OS_NAME)"
+	@echo "BASE_OS_ARCH:           $(BASE_OS_ARCH)"
+	@echo ""
+	@echo "TREE_BIN_NAME:          $(TREE_BIN_NAME)"
+	@echo "BIN_NAME:               $(BIN_NAME)"
+	@echo ""
+
+
+
 
 ## This is called by CI, so that we build for each OS and do the tests we want.
-ci-test: bin test
+ci-test: print bin test
 
 mod-tidy:
 	go mod tidy
@@ -22,6 +53,8 @@ bin:
 	mkdir -p $(BIN_ROOT)
 	@echo $(BIN_ROOT_NAME) >> .gitignore
 	cd cmd/dir-cleaner && go build -o $(BIN_ROOT)/$(BIN_NAME)
+bin-cross:
+	
 
 run-h:
 	$(BIN_NAME) -h
@@ -53,7 +86,7 @@ test-create: test-del
 	@echo ""
 	@echo "- printing the test folders"
 	@echo ""
-	cd $(TEST_ROOT) && tree -h -a
+	cd $(TEST_ROOT) && $(TREE_BIN_NAME) -h -a
 	@echo ""
 
 	## double nest it. turned off because Ubuntu hates copying folders into itself.
@@ -62,12 +95,15 @@ test-create: test-del
 
 test-run:
 	# objective is to delete all folders and sub folders with .bin, .dep, folders.
-	# mac works :) Tool azy to write an assertion right now ..
+	# mac works :) Tool lazy to write an assertion right now ..
+
 	# in ci, darwin and ubuntu work, but windows does not see these files. Might be the path symbol ?
 	cd $(TEST_ROOT) && $(BIN_NAME) --verbose --pattern */.bin
 	cd $(TEST_ROOT) && $(BIN_NAME) --verbose --pattern */.dep
 
 	# Test to see if windows prefers different path symbols ?
+	# Of Maybe its because i am asking CI to use a Bash shell ?
+	# I tried both on Windows arm64 and neither worked
 	cd $(TEST_ROOT) && $(BIN_NAME) --verbose --pattern *\.bin
 	cd $(TEST_ROOT) && $(BIN_NAME) --verbose --pattern *\.dep
 
