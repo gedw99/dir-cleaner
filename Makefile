@@ -22,9 +22,13 @@ bin:
 run-h:
 	$(BIN_NAME) -h
 
+run-version:
+	# TODO: align versioning for bin, goreleaser and dep updates.
+	$(BIN_NAME) --version
+
 TEST_ROOT_NAME=test
 TEST_ROOT=$(PWD)/$(TEST_ROOT_NAME)
-test: test-create
+test: test-create test-run
 test-del:
 	rm -rf $(TEST_ROOT)
 test-create: test-del
@@ -40,9 +44,10 @@ test-create: test-del
 	cd $(TEST_ROOT)/sub01/.src  && touch main.txt other.txt
 
 test-run:
-	# objective is to delete all folders and sub folders with varius .bin folders.
-	cd $(TEST_ROOT) && $(BIN_NAME) -h
-	cd $(TEST_ROOT) && $(BIN_NAME) --dry-run 
+	# objective is to delete all folders and sub folders with varius .bin, .dep, folders.
+	cd $(TEST_ROOT) && $(BIN_NAME) --verbose --pattern */.bin
+
+	cd $(TEST_ROOT) && $(BIN_NAME) --verbose --pattern */.dep
 	
 
 release-dep:
