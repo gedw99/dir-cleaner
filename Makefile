@@ -43,11 +43,12 @@ ci-test: print bin test
 
 ### mod
 
-MOD-ORIGINAL=github.com/guumaster/dir-cleaner
+MOD_ORIGINAL=github.com/guumaster/dir-cleaner
 
 mod-print:
 	@echo ""
 	@echo "- mod"
+	@echo "MOD_ORIGINAL:     $(MOD_ORIGINAL)"
 	@echo ""
 	# TODO: check if on a fork, that mod replace is correct and visa versa.
 
