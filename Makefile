@@ -17,7 +17,7 @@ endif
 
 BIN_NAME=dir_cleaner
 ifeq ($(BASE_OS_NAME),windows)
-	BIN_NAME=git.exe
+	BIN_NAME=dir_cleaner.exe
 endif
 
 
