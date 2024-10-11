@@ -61,11 +61,17 @@ test-create: test-del
 	#cp -r $(TEST_ROOT)/sub01 $(TEST_ROOT)/sub01/sub
 
 test-run:
-	# objective is to delete all folders and sub folders with varius .bin, .dep, folders.
-	# works :) Toolazy to write an assertion right now..
+	# objective is to delete all folders and sub folders with .bin, .dep, folders.
+	# mac works :) Tool azy to write an assertion right now ..
+	# in ci, darwin and ubuntu work, but windows does not see these files. Might be the path symbol ?
 	cd $(TEST_ROOT) && $(BIN_NAME) --verbose --pattern */.bin
-
 	cd $(TEST_ROOT) && $(BIN_NAME) --verbose --pattern */.dep
+
+	# Test to see if windows prefers different path symbols ?
+	cd $(TEST_ROOT) && $(BIN_NAME) --verbose --pattern *\.bin
+	cd $(TEST_ROOT) && $(BIN_NAME) --verbose --pattern *\.dep
+
+
 
 test-go:
 	go test ./...
