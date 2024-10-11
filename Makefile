@@ -99,6 +99,7 @@ mod-upgrade: mod-tidy
 	# https://github.com/oligot/go-mod-upgrade
 	$(GO_BIN_NAME) install github.com/oligot/go-mod-upgrade@latest
 	# ensure it uses the right Modfile. BUT THRRE IS NOT -modfile flag ?
+	# WAITING ON ISSUE ANSWER: https://github.com/oligot/go-mod-upgrade/issues/56
 	$(MOD_UPGRADE_BIN_NAME) -h
 
 ### bin and run
