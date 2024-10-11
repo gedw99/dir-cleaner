@@ -50,12 +50,15 @@ ci-test: print bin test
 mod-fork-del:
 	# remove replace directive.
 	#  https://github.com/guumaster/dir-cleaner
+	go mod edit -replace github.com/guumaster/dir-cleaner=github.com/gedw99/dir-cleaner@master
 
 mod-fork:
 	# create replace directive.
+	# see: https://www.jvt.me/posts/2022/07/07/go-mod-fork/
+
 	# https://github.com/gedw99/dir-cleaner
 	go mod edit -replace github.com/guumaster/dir-cleaner=github.com/gedw99/dir-cleaner@master
-
+	$(MAKE) mod-tidy
 
 mod-tidy:
 	go mod tidy
