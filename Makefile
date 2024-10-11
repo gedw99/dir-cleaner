@@ -62,39 +62,43 @@ ci-test: print bin test
 
 ### mod
 
+# go build -modfile path/to/projectb/go.mod
+
 MOD_ORIGINAL=github.com/guumaster/dir-cleaner
 
+# TODO. weite a ifelse, to check if we are on the MOD_ORIGINAL
+# Then pick the right MOD_FILE
 #MOD_FILE=go.mod
+# HARDCODED FOR now to my fork.
 MOD_FILE=local.go.mod
-
-# go build -modfile path/to/projectb/go.mod
 
 mod-print:
 	@echo ""
 	@echo "- mod"
 	@echo "MOD_ORIGINAL:     $(MOD_ORIGINAL)"
+	@echo "MOD_FILE:       $(MOD_FILE)"
 	@echo ""
-	# TODO: check if on a fork, that mod replace is correct and visa versa.
-mod-why:
-	$(GO_BIN_NAME) mod why -modfile $(MOD_FILE)
 
-mod-fork-del:
-	# remove replace directive.
-	#  https://github.com/guumaster/dir-cleaner
-	#$(GO_BIN_NAME) mod edit -modfile $(MOD_FILE) -replace github.com/gedw99/dir-cleaner=github.com/guumaster/dir-cleaner@master
-	$(MAKE) mod-tidy
 mod-fork:
+	# ONLY run this is yout  on a fork !!
+
+	# TODO: ONCE WE have MOD_ORIGINAL checking, we can call mod-fork, checking as part of the make call chain.
+	# then setup for TaskFile, after i get Make working for everyone.
+
 	# create replace directive.
 	# see: https://www.jvt.me/posts/2022/07/07/go-mod-fork/
 
 	# https://github.com/gedw99/dir-cleaner
+
+	
 	$(GO_BIN_NAME) mod edit -modfile $(MOD_FILE) -replace github.com/guumaster/dir-cleaner=github.com/gedw99/dir-cleaner@master
 	$(MAKE) mod-tidy
 mod-tidy:
 	$(GO_BIN_NAME) mod tidy -modfile $(MOD_FILE)
 mod-upgrade: mod-tidy
+	# https://github.com/oligot/go-mod-upgrade
 	$(GO_BIN_NAME) install github.com/oligot/go-mod-upgrade@latest
-	# ensure it uses the right Modfile.
+	# ensure it uses the right Modfile. BUT THRRE IS NOT -modfile flag ?
 	$(MOD_UPGRADE_BIN_NAME) -h
 
 ### bin and run
