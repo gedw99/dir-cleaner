@@ -17,4 +17,4 @@ jobs:
       - name: go Test
         run: go test ./...
       - name: folder Test
-        run: make test
+        run: make ci-test

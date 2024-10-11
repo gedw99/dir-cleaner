@@ -11,7 +11,7 @@ export PATH:=$(BIN_ROOT):$(PATH)
 print:
 
 ## This is called by CI, so that we build for each OS and do the tests we want.
-ci: bin test
+ci-test: bin test
 
 mod-tidy:
 	go mod tidy
