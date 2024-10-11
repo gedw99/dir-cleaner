@@ -15,10 +15,34 @@ mod-upgrade: mod-tidy
 	go install github.com/oligot/go-mod-upgrade@latest
 	go-mod-upgrade
 bin:
+	mkdir -p $(BIN_ROOT)
+	@echo $(BIN_ROOT) >> .gitignore
 	cd cmd/dir-cleaner && go build -o $(BIN_ROOT)/$(BIN_NAME)
 
 run-h:
 	$(BIN_NAME) -h
+
+TEST_NAME=test
+TEST_PATH=$(PWD)/$(TEST_NAME)
+test-del:
+	rm -rf $(TEST_PATH)
+test-create: test-del
+	mkdir -p $(TEST_PATH)
+	@echo $(TEST_NAME) >> .gitignore
+	cd $(TEST_PATH) && mkdir -p sub01
+	cd $(TEST_PATH)/sub01 && touch Makefile README.md other.txt .gitignore
+	cd $(TEST_PATH)/sub01 && mkdir -p .bin
+	cd $(TEST_PATH)/sub01/.bin && touch bigfile.exe
+	cd $(TEST_PATH)/sub01 && mkdir -p .dep
+	cd $(TEST_PATH)/sub01/.dep && touch bigdep.exe
+	cd $(TEST_PATH)/sub01 && mkdir -p .src
+	cd $(TEST_PATH)/sub01/.src  && touch main.txt other.txt
+
+test-run:
+	# objective is to delete all folders and sub folders with varius .bin folders.
+	cd $(TEST_PATH) && $(BIN_NAME) -h
+	cd $(TEST_PATH) && $(BIN_NAME) --dry-run 
+	
 
 release-dep:
 	# https://github.com/goreleaser/goreleaser
