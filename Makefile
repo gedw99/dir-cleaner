@@ -10,7 +10,8 @@ export PATH:=$(BIN_ROOT):$(PATH)
 
 print:
 
-
+## This is called by CI, so that we build for each OS and do the tests we want.
+ci: bin test
 
 mod-tidy:
 	go mod tidy
@@ -24,14 +25,13 @@ bin:
 
 run-h:
 	$(BIN_NAME) -h
-
 run-version:
 	# TODO: align versioning for bin, goreleaser and dep updates.
 	$(BIN_NAME) --version
 
 TEST_ROOT_NAME=test
 TEST_ROOT=$(PWD)/$(TEST_ROOT_NAME)
-test: test-create test-run
+test: test-create test-run test-go
 test-del:
 	rm -rf $(TEST_ROOT)
 test-create: test-del
@@ -56,6 +56,9 @@ test-run:
 	cd $(TEST_ROOT) && $(BIN_NAME) --verbose --pattern */.bin
 
 	cd $(TEST_ROOT) && $(BIN_NAME) --verbose --pattern */.dep
+
+test-go:
+	go test ./...
 
 release-dep:
 	# https://github.com/goreleaser/goreleaser

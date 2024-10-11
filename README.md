@@ -78,3 +78,7 @@ Path: [/]: Scanned 2,045,830 files. Matched 254,183 in 2,731 directories. [1.9 G
 
 * [guumaster](https://github.com/guumaster)
 
+
+## TODO
+
+upgrade CI like here https://github.com/chapar-rest/chapar/tree/main/.github/workflows, so we cal make from CI to have single logic and test on ALL platforms.
