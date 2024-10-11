@@ -46,6 +46,10 @@ print:
 ## This is called by CI, so that we build for each OS and do the tests we want.
 ci-test: print bin test
 
+mod-init:
+	rm -rf go.mod
+	rm -rf go.sum
+	go mod init github.com/gedw99/dir-cleaner
 mod-tidy:
 	go mod tidy
 mod-upgrade: mod-tidy
@@ -64,8 +68,10 @@ run-version:
 	# TODO: align versioning for bin, goreleaser and dep updates.
 	$(BIN_NAME) --version
 
+
 TEST_ROOT_NAME=test
 TEST_ROOT=$(PWD)/$(TEST_ROOT_NAME)
+
 test: test-create test-run test-go
 test-del:
 	rm -rf $(TEST_ROOT)
