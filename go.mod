@@ -1,11 +1,9 @@
-module dir-cleaner
+module github.com/IGZgustavomarin/dir-cleaner
 
 go 1.23.2
 
 require (
-	github.com/IGZgustavomarin/dir-cleaner v1.2.0
 	github.com/dustin/go-humanize v1.0.1
-	github.com/gedw99/dir-cleaner v0.0.0-20241011061435-c1f7ca375ad4
 	github.com/urfave/cli/v2 v2.27.4
 )
 

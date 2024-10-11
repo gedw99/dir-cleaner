@@ -10,7 +10,7 @@ import (
 
 	"github.com/urfave/cli/v2"
 
-	"dir-cleaner/pkg/cleaner"
+	"github.com/IGZgustavomarin/dir-cleaner/pkg/cleaner"
 )
 
 var version = "dev"

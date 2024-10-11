@@ -47,10 +47,11 @@ print:
 ci-test: print bin test
 
 mod-init:
-	rm -rf go.mod
-	rm -rf go.sum
-	go mod init dir-cleaner
-	$(MAKE) mod-tidy
+	# For forks, we need to do the replace thing...
+	#rm -rf go.mod
+	#rm -rf go.sum
+	#go mod init dir-cleaner
+	#$(MAKE) mod-tidy
 mod-tidy:
 	go mod tidy
 mod-upgrade: mod-tidy
@@ -130,6 +131,7 @@ test-run:
 
 test-go:
 	go test ./...
+	#cd tests && go test ./...
 
 release-dep:
 	# https://github.com/goreleaser/goreleaser
