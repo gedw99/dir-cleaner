@@ -2,12 +2,24 @@
 
 # shells for github: https://dev.to/pwd9000/github-actions-all-the-shells-581h
 
+# os
+
 BASE_SHELL_OS_NAME := $(shell uname -s | tr A-Z a-z)
 BASE_SHELL_OS_ARCH := $(shell uname -m | tr A-Z a-z)
 
-# os
-BASE_GO_OS_NAME := $(shell go env GOOS)
-BASE_CO_OS_ARCH := $(shell go env GOARCH)
+GO_BIN_NAME=go
+ifeq ($(BASE_SHELL_OS_NAME),windows)
+	GO_BIN_NAME=go.exe
+endif
+
+
+# go
+
+BASE_GO_OS_NAME := $(shell $(GO_BIN_NAME) env GOOS)
+BASE_CO_OS_ARCH := $(shell $(GO_BIN_NAME) env GOARCH)
+
+
+# bin
 
 BIN_ROOT_NAME=.bin
 BIN_ROOT=$(PWD)/$(BIN_ROOT_NAME)
@@ -33,6 +45,7 @@ print:
 	@echo "BASE_GO_OS_NAME:        $(BASE_GO_OS_NAME)"
 	@echo "BASE_CO_OS_ARCH:        $(BASE_CO_OS_ARCH)"
 	@echo ""
+	@echo "GO_BIN_NAME:            $(GO_BIN_NAME)"
 	@echo "TREE_BIN_NAME:          $(TREE_BIN_NAME)"
 	@echo "BIN_NAME:               $(BIN_NAME)"
 	@echo ""
@@ -45,7 +58,7 @@ ci-test: print bin test
 
 MOD_ORIGINAL=github.com/guumaster/dir-cleaner
 
-MOD_FILE=go.mod
+#MOD_FILE=go.mod
 MOD_FILE=local.go.mod
 
 # go build -modfile path/to/projectb/go.mod
@@ -56,23 +69,25 @@ mod-print:
 	@echo "MOD_ORIGINAL:     $(MOD_ORIGINAL)"
 	@echo ""
 	# TODO: check if on a fork, that mod replace is correct and visa versa.
+mod-why:
+	$(GO_BIN_NAME) mod why -modfile $(MOD_FILE)
 
 mod-fork-del:
 	# remove replace directive.
 	#  https://github.com/guumaster/dir-cleaner
-	go mod edit -modfile $(MOD_FILE) -replace github.com/gedw99/dir-cleaner=github.com/guumaster/dir-cleaner@master
+	#$(GO_BIN_NAME) mod edit -modfile $(MOD_FILE) -replace github.com/gedw99/dir-cleaner=github.com/guumaster/dir-cleaner@master
 	$(MAKE) mod-tidy
 mod-fork:
 	# create replace directive.
 	# see: https://www.jvt.me/posts/2022/07/07/go-mod-fork/
 
 	# https://github.com/gedw99/dir-cleaner
-	go mod edit -replace github.com/guumaster/dir-cleaner=github.com/gedw99/dir-cleaner@master
+	$(GO_BIN_NAME) mod edit -modfile $(MOD_FILE) -replace github.com/guumaster/dir-cleaner=github.com/gedw99/dir-cleaner@master
 	$(MAKE) mod-tidy
 mod-tidy:
-	go mod tidy
+	$(GO_BIN_NAME) mod tidy
 mod-upgrade: mod-tidy
-	go install github.com/oligot/go-mod-upgrade@latest
+	$(GO_BIN_NAME) install github.com/oligot/go-mod-upgrade@latest
 	go-mod-upgrade
 
 ### bin and run
@@ -82,7 +97,7 @@ bin-del:
 bin: bin-del
 	mkdir -p $(BIN_ROOT)
 	@echo $(BIN_ROOT_NAME) >> .gitignore
-	cd cmd/dir-cleaner && go build -o $(BIN_ROOT)/$(BIN_NAME)
+	cd cmd/dir-cleaner && $(GO_BIN_NAME) build -o $(BIN_ROOT)/$(BIN_NAME)
 bin-cross:
 	# let goreleaaer do it
 
@@ -121,7 +136,7 @@ test-create: test-del
 	# need this to see whats going on inside CI.
 	# This works correctly on Windows ARM64 ( and darwin and linux ), so its correct to use it for testing.
 	# https://github.com/a8m/tree
-	go install github.com/a8m/tree/cmd/tree@latest
+	$(GO_BIN_NAME) install github.com/a8m/tree/cmd/tree@latest
 
 	@echo ""
 	@echo "- printing the test folders"
@@ -148,8 +163,8 @@ test-run:
 	cd $(TEST_ROOT) && $(BIN_NAME) --verbose --pattern *\.dep
 
 test-go:
-	go test ./...
-	#cd tests && go test ./...
+	$(GO_BIN_NAME) test ./...
+	#cd tests && $(GO_BIN_NAME) test ./...
 
 ### tag and release 
 
@@ -162,7 +177,7 @@ tag:
 release-dep:
 	# https://github.com/goreleaser/goreleaser
 	# https://github.com/goreleaser/goreleaser/releases/tag/v2.3.2
-	go install github.com/goreleaser/goreleaser/v2@v2.3.2
+	$(GO_BIN_NAME) install github.com/goreleaser/goreleaser/v2@v2.3.2
 release: release-dep
 	goreleaser check
 	goreleaser release --snapshot --clean
