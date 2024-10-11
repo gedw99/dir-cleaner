@@ -1,11 +1,11 @@
 on: [push, pull_request]
-name: Test - all OS
+name: Test - Windows OS - default shell
 jobs:
   test:
     strategy:
       matrix:
         go-version: [1.21.x, 1.22.x, 1.23.x]
-        platform: [macos-latest, ubuntu-latest, windows-latest]
+        platform: [windows-latest]
     runs-on: ${{ matrix.platform }}
     steps:
       - name: Install Go
@@ -17,5 +17,4 @@ jobs:
       - name: go Test
         run: go test ./...
       - name: folder Test
-        shell: bash
         run: make ci-test

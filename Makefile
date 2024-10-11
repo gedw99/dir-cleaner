@@ -4,19 +4,19 @@ BASE_SHELL_OS_NAME := $(shell uname -s | tr A-Z a-z)
 BASE_SHELL_OS_ARCH := $(shell uname -m | tr A-Z a-z)
 
 # os
-BASE_OS_NAME := $(shell go env GOOS)
-BASE_OS_ARCH := $(shell go env GOARCH)
+BASE_GO_OS_NAME := $(shell go env GOOS)
+BASE_CO_OS_ARCH := $(shell go env GOARCH)
 
 BIN_ROOT_NAME=.bin
 BIN_ROOT=$(PWD)/$(BIN_ROOT_NAME)
 
 TREE_BIN_NAME=tree
-ifeq ($(BASE_OS_NAME),windows)
+ifeq ($(BASE_GO_OS_NAME),windows)
 	TREE_BIN_NAME=tree.exe
 endif
 
 BIN_NAME=dir_cleaner
-ifeq ($(BASE_OS_NAME),windows)
+ifeq ($(BASE_GO_OS_NAME),windows)
 	BIN_NAME=dir_cleaner.exe
 endif
 
@@ -31,8 +31,8 @@ print:
 	@echo "BASE_SHELL_OS_NAME:     $(BASE_SHELL_OS_NAME)"
 	@echo "BASE_SHELL_OS_ARCH:     $(BASE_SHELL_OS_ARCH)"
 	@echo "--- base : os ---"
-	@echo "BASE_OS_NAME:           $(BASE_OS_NAME)"
-	@echo "BASE_OS_ARCH:           $(BASE_OS_ARCH)"
+	@echo "BASE_GO_OS_NAME:        $(BASE_GO_OS_NAME)"
+	@echo "BASE_CO_OS_ARCH:        $(BASE_CO_OS_ARCH)"
 	@echo ""
 	@echo "TREE_BIN_NAME:          $(TREE_BIN_NAME)"
 	@echo "BIN_NAME:               $(BIN_NAME)"
