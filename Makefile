@@ -45,6 +45,11 @@ ci-test: print bin test
 
 MOD_ORIGINAL=github.com/guumaster/dir-cleaner
 
+MOD_FILE=go.mod
+MOD_FILE=local.go.mod
+
+# go build -modfile path/to/projectb/go.mod
+
 mod-print:
 	@echo ""
 	@echo "- mod"
@@ -55,7 +60,7 @@ mod-print:
 mod-fork-del:
 	# remove replace directive.
 	#  https://github.com/guumaster/dir-cleaner
-	go mod edit -replace github.com/gedw99/dir-cleaner=github.com/guumaster/dir-cleaner@master
+	go mod edit -modfile $(MOD_FILE) -replace github.com/gedw99/dir-cleaner=github.com/guumaster/dir-cleaner@master
 	$(MAKE) mod-tidy
 mod-fork:
 	# create replace directive.
