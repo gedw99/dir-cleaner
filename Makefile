@@ -24,6 +24,11 @@ BASE_CO_OS_ARCH := $(shell $(GO_BIN_NAME) env GOARCH)
 BIN_ROOT_NAME=.bin
 BIN_ROOT=$(PWD)/$(BIN_ROOT_NAME)
 
+MOD_UPGRADE_BIN_NAME=go-mod-upgrade
+ifeq ($(BASE_GO_OS_NAME),windows)
+	MOD_UPGRADE_BIN_NAME=go-mod-upgrade.exe
+endif
+
 TREE_BIN_NAME=tree
 ifeq ($(BASE_GO_OS_NAME),windows)
 	TREE_BIN_NAME=tree.exe
@@ -46,6 +51,7 @@ print:
 	@echo "BASE_CO_OS_ARCH:        $(BASE_CO_OS_ARCH)"
 	@echo ""
 	@echo "GO_BIN_NAME:            $(GO_BIN_NAME)"
+	@echo "MOD_UPGRADE_BIN_NAME:   $(MOD_UPGRADE_BIN_NAME)"
 	@echo "TREE_BIN_NAME:          $(TREE_BIN_NAME)"
 	@echo "BIN_NAME:               $(BIN_NAME)"
 	@echo ""
@@ -85,10 +91,11 @@ mod-fork:
 	$(GO_BIN_NAME) mod edit -modfile $(MOD_FILE) -replace github.com/guumaster/dir-cleaner=github.com/gedw99/dir-cleaner@master
 	$(MAKE) mod-tidy
 mod-tidy:
-	$(GO_BIN_NAME) mod tidy
+	$(GO_BIN_NAME) mod tidy -modfile $(MOD_FILE)
 mod-upgrade: mod-tidy
 	$(GO_BIN_NAME) install github.com/oligot/go-mod-upgrade@latest
-	go-mod-upgrade
+	# ensure it uses the right Modfile.
+	$(MOD_UPGRADE_BIN_NAME) -h
 
 ### bin and run
 
