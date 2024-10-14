@@ -7,21 +7,8 @@
 BASE_SHELL_OS_NAME := $(shell uname -s | tr A-Z a-z)
 BASE_SHELL_OS_ARCH := $(shell uname -m | tr A-Z a-z)
 
-DEP_GO_BIN_NAME=go
-ifeq ($(BASE_SHELL_OS_NAME),windows)
-	DEP_GO_BIN_NAME=go.exe
-endif
-
-# go
-
 BASE_GO_OS_NAME := $(shell $(DEP_GO_BIN_NAME) env GOOS)
 BASE_CO_OS_ARCH := $(shell $(DEP_GO_BIN_NAME) env GOARCH)
-
-# mod
-
-# Original
-MOD_PACKAGE_NAME=github.com/IGZgustavomarin/dir-cleaner
-MOD_COPY_FILE=go-original.mod
 
 # dep
 
@@ -43,6 +30,19 @@ DEP_RELEASER_BIN_NAME=goreleaser
 ifeq ($(BASE_GO_OS_NAME),windows)
 	DEP_RELEASER_BIN_NAME=goreleaser.exe
 endif
+
+DEP_GO_BIN_NAME=go
+ifeq ($(BASE_SHELL_OS_NAME),windows)
+	DEP_GO_BIN_NAME=go.exe
+endif
+
+
+# mod
+
+# Original
+MOD_PACKAGE_NAME=github.com/IGZgustavomarin/dir-cleaner
+MOD_COPY_FILE=go-original.mod
+
 
 # bin
 
@@ -82,23 +82,9 @@ print:
 
 
 ## This is called by CI, so that we build for each OS and do the tests we want.
-ci-test: print dep print bin test
+ci-test: print print bin test
 
-### dep
-
-dep:
-	# https://github.com/oligot/go-mod-upgrade
-	$(DEP_GO_BIN_NAME) install github.com/oligot/go-mod-upgrade@latest
-
-	# need this to see whats going on inside CI.
-	# This works correctly on Windows ARM64 ( and darwin and linux ), so its correct to use it for testing.
-	# https://github.com/a8m/tree
-	$(DEP_GO_BIN_NAME) install github.com/a8m/tree/cmd/tree@latest
-
-	# https://github.com/goreleaser/goreleaser
-	# https://github.com/goreleaser/goreleaser/releases/tag/v2.3.2
-	$(DEP_GO_BIN_NAME) install github.com/goreleaser/goreleaser/v2@v2.3.2
-
+	
 ### mod
 
 mod-fork:
@@ -106,7 +92,6 @@ mod-fork:
 	cp go.mod $(MOD_COPY_FILE)
 
 	# modify it to our fork namespace.
-	# TODO. reflect off git to work it out ?
 	$(DEP_GO_BIN_NAME) mod edit -replace $(MOD_PACKAGE_NAME)=github.com/gedw99/dir-cleaner@master
 	$(MAKE) mod-tidy
 mod-fork-del:
@@ -116,8 +101,10 @@ mod-fork-del:
 mod-tidy:
 	@echo go.sum >> .gitignore
 	$(DEP_GO_BIN_NAME) mod tidy
-
-mod-upgrade: mod-tidy
+mod-upgrade-dep:
+	# https://github.com/oligot/go-mod-upgrade
+	$(DEP_GO_BIN_NAME) install github.com/oligot/go-mod-upgrade@latest
+mod-upgrade: mod-tidy mod-upgrade-dep
 	$(DEP_UPGRADE_BIN_NAME)
 
 
@@ -164,7 +151,9 @@ test-create: test-del
 	cd $(TEST_ROOT)/sub01 && mkdir -p .src
 	cd $(TEST_ROOT)/sub01/.src  && touch main.txt other.txt
 
-	
+	# https://github.com/a8m/tree prints the directory tree, so that we can see whats going on in each OS.
+	# It does give correct results on all OS and ARCH. I checked.
+	$(DEP_GO_BIN_NAME) install github.com/a8m/tree/cmd/tree@latest
 
 	@echo ""
 	@echo "- printing the test folders"
@@ -178,7 +167,8 @@ test-create: test-del
 
 test-run:
 	# objective is to delete all folders and sub folders with .bin, .dep, folders.
-	# mac works :) Tool lazy to write an assertion right now ..
+	# Tool lazy to write an assertion right now ...
+
 
 	# in ci, darwin and ubuntu work, but windows does not see these files. Might be the path symbol ?
 	cd $(TEST_ROOT) && $(BIN_NAME) --verbose --pattern */.bin
@@ -203,6 +193,9 @@ tag:
 	git push origin $(TAG_VERSION)
 	
 release: 
+	# https://github.com/goreleaser/goreleaser/releases/tag/v2.3.2
+	$(DEP_GO_BIN_NAME) install github.com/goreleaser/goreleaser/v2@v2.3.2
+
 	$(DEP_RELEASER_BIN_NAME) check
 	$(DEP_RELEASER_BIN_NAME) release --snapshot --clean
 

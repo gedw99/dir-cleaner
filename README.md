@@ -4,7 +4,12 @@
 [![License](https://img.shields.io/github/license/guumaster/dir-cleaner)](https://github.com/guumaster/dir-cleaner/LICENSE)
 # Dir Cleaner
 
-NOTE: This is a fork of https://github.com/guumaster/dir-cleaner, due to that in installing a bin called "cmd", which is just too generic, and clashes.
+NOTE: This is a fork of https://github.com/guumaster/dir-cleaner with the following changes
+
+- bin name is unique, instead of jsut cmd
+- make and golden test
+- BUG: does not work on Windows. Still needs to be fixed.
+
 
 A simple tool to scan and remove unwanted directories from your system.
 

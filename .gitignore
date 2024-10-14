@@ -4,6 +4,7 @@ dist
 testing*
 go.sum
 
+
 .bin
 test-golden
 .bin
@@ -23,20 +24,6 @@ test-golden
 .bin
 .bin
 .bin
-go.sum
-go.sum
-go.sum
-.bin
-.bin
-test-golden
-go.sum
-go.sum
-go.sum
-.bin
-.bin
-test-golden
-go.sum
-go.sum
-.bin
 test-golden
 .bin
+test-golden
