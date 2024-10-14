@@ -56,6 +56,11 @@ endif
 
 export PATH:=$(BIN_ROOT):$(PATH)
 
+### tags
+
+TAG_VERSION=v0.2.0
+TAG_MESSAGE=Another release
+
 print:
 	@echo ""
 	@echo "--- shell ---"
@@ -186,8 +191,7 @@ test-go:
 
 ### tag and release 
 
-TAG_VERSION=v0.1.0
-TAG_MESSAGE=Another release
+
 
 tag:
 	git tag -a $(TAG_VERSION) -m "$(TAG_MESSAGE)"

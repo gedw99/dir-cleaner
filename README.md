@@ -6,7 +6,7 @@
 
 NOTE: This forks ( https://github.com/gedw99/dir-cleaner ) is a fork of https://github.com/guumaster/dir-cleaner with the following changes
 
-- bin name is unique, instead of jsut cmd
+- bin name is unique, instead of just "cmd"
 - make and golden test
 - BUG: does not work on Windows. Still needs to be fixed.
 - fixed go releaser
