@@ -2,6 +2,7 @@
 .vscode
 dist
 testing*
+go.sum
 
 .bin
 test-golden
@@ -17,3 +18,25 @@ test-golden
 test-golden
 .bin
 test-golden
+.bin
+.bin
+.bin
+.bin
+.bin
+go.sum
+go.sum
+go.sum
+.bin
+.bin
+test-golden
+go.sum
+go.sum
+go.sum
+.bin
+.bin
+test-golden
+go.sum
+go.sum
+.bin
+test-golden
+.bin
