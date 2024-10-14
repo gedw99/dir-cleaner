@@ -7,6 +7,12 @@
 BASE_SHELL_OS_NAME := $(shell uname -s | tr A-Z a-z)
 BASE_SHELL_OS_ARCH := $(shell uname -m | tr A-Z a-z)
 
+
+DEP_GO_BIN_NAME=go
+ifeq ($(BASE_SHELL_OS_NAME),windows)
+	DEP_GO_BIN_NAME=go.exe
+endif
+
 BASE_GO_OS_NAME := $(shell $(DEP_GO_BIN_NAME) env GOOS)
 BASE_CO_OS_ARCH := $(shell $(DEP_GO_BIN_NAME) env GOARCH)
 
@@ -30,12 +36,6 @@ DEP_RELEASER_BIN_NAME=goreleaser
 ifeq ($(BASE_GO_OS_NAME),windows)
 	DEP_RELEASER_BIN_NAME=goreleaser.exe
 endif
-
-DEP_GO_BIN_NAME=go
-ifeq ($(BASE_SHELL_OS_NAME),windows)
-	DEP_GO_BIN_NAME=go.exe
-endif
-
 
 # mod
 
@@ -187,10 +187,14 @@ test-go:
 ### tag and release 
 
 TAG_VERSION=v0.1.0
-TAG_MESSAGE=First release
+TAG_MESSAGE=Another release
+
 tag:
 	git tag -a $(TAG_VERSION) -m "$(TAG_MESSAGE)"
 	git push origin $(TAG_VERSION)
+tag-del:
+	git tag -d $(TAG_VERSION)
+
 	
 release: 
 	# https://github.com/goreleaser/goreleaser/releases/tag/v2.3.2
