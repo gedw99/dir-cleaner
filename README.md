@@ -9,6 +9,8 @@ NOTE: This is a fork of https://github.com/guumaster/dir-cleaner with the follow
 - bin name is unique, instead of jsut cmd
 - make and golden test
 - BUG: does not work on Windows. Still needs to be fixed.
+- fixed go releaser
+- upgraded mods
 
 
 A simple tool to scan and remove unwanted directories from your system.
