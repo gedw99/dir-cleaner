@@ -4,7 +4,7 @@
 [![License](https://img.shields.io/github/license/guumaster/dir-cleaner)](https://github.com/guumaster/dir-cleaner/LICENSE)
 # Dir Cleaner
 
-NOTE: This is a fork of https://github.com/guumaster/dir-cleaner with the following changes
+NOTE: This forks ( https://github.com/gedw99/dir-cleaner ) is a fork of https://github.com/guumaster/dir-cleaner with the following changes
 
 - bin name is unique, instead of jsut cmd
 - make and golden test
